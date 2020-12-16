@@ -49,3 +49,14 @@ http://rogerdudler.github.io/git-guide/
 10) Ejecutar `git push origin main -f`
 
 [![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://github.com/stvansolano/dotnet-docker-playground)
+
+
+## Links de apoyo (adicional)
+- https://docs.microsoft.com/es-mx/search/?terms=asp.net
+- https://stackoverflow.com/questions/32426267/visual-studio-comment-shortcut/32426360
+- https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/configure-language-version
+- https://visualstudiomagazine.com/articles/2019/06/06/visual-studio-productivity.aspx
+- https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-5.0
+- https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-apis/
+- https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-how-to?pivots=dotnet-5-0
+
