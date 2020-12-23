@@ -29,8 +29,21 @@ namespace ProductsApi
             // Middleware
             services.AddControllers();// Middleware
 
-            services.AddSingleton<object[]>(new[] { new Models.Product { Id=1, Name="Pants" }, new Models.Product { Id = 2, Name = "Socks" } });
-            //
+            //services.AddSingleton<object[]>(new[] { new Models.Product { Id=1, Name="Pants" }, new Models.Product { Id = 2, Name = "Socks" } });
+            services.AddSingleton<Repositories.ProducRepository>();
+            //services.AddScoped<Repositories.ProducRepository>();
+            //services.AddTransient<Repositories.ProducRepository>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "CORS",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://localhost:80/")//pueden ser varios
+                                                          .AllowAnyHeader()
+                                                          .AllowAnyMethod()// GET, POST, PUT
+                                                          .AllowCredentials();
+                                  });
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProductsApi", Version = "v1" });
