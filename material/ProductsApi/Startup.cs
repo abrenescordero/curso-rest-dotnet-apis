@@ -16,7 +16,7 @@ namespace ProductsApi
 {
     public class Startup
     {
-        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,7 +29,24 @@ namespace ProductsApi
         {
             //Middleware
 
-            services.AddSingleton<object[]>(new[] { new Models.Product { Id = 1, Name = "Pants" } });
+            services.AddSingleton<Repositories.ProductRepository>();
+
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "CORS",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://localhost:80")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      .AllowCredentials();
+                                  });
+            });
+
+            // services.AddResponseCaching();
+            services.AddControllers();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -45,6 +62,8 @@ namespace ProductsApi
                 app.UseDeveloperExceptionPage();
 
             }
+
+            app.UseCors("CORS");
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductsApi v1"));
