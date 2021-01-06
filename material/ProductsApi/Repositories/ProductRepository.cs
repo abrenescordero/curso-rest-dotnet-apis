@@ -1,4 +1,5 @@
-﻿using ProductsApi.Models;
+﻿using Core.Data;
+using ProductsApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,43 +10,43 @@ namespace Repositories
     public class ProductRepository
 
     {
-
-        private readonly List<Product> _products;
-        public ProductRepository()
+        //ORM Object Relational Mapping
+        private readonly AdventureWorksDbContext _context;
+        public ProductRepository(AdventureWorksDbContext context)
         {
-            _products = new List<Product>(new[] { new Product { Id = 1, Name = "Pants" } });
+            _context = context;
         }
 
         public Product[] Get()
         {
-
-            return _products.ToArray();
+            return _context.Products.ToArray();
         }
 
         public Product Add(Product value)
         {
-            _products.Add(value);
-            value.Id = _products.Count;
+            _context.Products.Add(value);
+            _context.SaveChanges();
 
             return value;
         }
 
         public void Delete(int id)
         {
-            var match = _products.FirstOrDefault(model => model.Id == id);
+            var match = _context.Products.Find(id);
 
             if (match != null)
             {
-                _products.Remove(match);
+                _context.Products.Remove(match);
             }
-        
+            _context.SaveChanges();
+
         }
 
-        public  object Get(int id)
+        public object Get(int id)
         {
 
-            return _products.FirstOrDefault(model => model.Id == id);
-            
+            return _context.Products.Find(id);
+
         }
     }
 }

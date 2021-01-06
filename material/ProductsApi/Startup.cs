@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,8 +31,21 @@ namespace ProductsApi
         {
             //Middleware
 
-            services.AddSingleton<Repositories.ProductRepository>();
+            services.AddDbContext<AdventureWorksDbContext>(builder =>
+            {
 
+                var options = builder.UseInMemoryDatabase("FakeDatabase");
+
+                var dbOptions = new DbContextOptionsBuilder<AdventureWorksDbContext>()
+                                   .UseInMemoryDatabase("FakeDatabase").Options;
+
+                using var db = new AdventureWorksDbContext(dbOptions);
+                db.Database.EnsureCreated();
+            });
+
+            //services.AddScoped<AdventureWorksDbContext>();
+
+            services.AddScoped<Repositories.ProductRepository>();
 
             services.AddCors(options =>
             {
@@ -45,8 +60,6 @@ namespace ProductsApi
             });
 
             // services.AddResponseCaching();
-            services.AddControllers();
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

@@ -21,17 +21,15 @@ namespace ProductsApi.Controllers
         //CRUD -> Create,Read,Update,Delete
 
         private readonly ILogger<ProductsController> _logger;
-        //private readonly AdventureWorksDbContext _context;
         private readonly ProductRepository _repository;
         public ProductsController(ILogger<ProductsController> logger,
            ProductRepository repository
-            //, AdventureWorksDbContext context
+
             )
         {
             _logger = logger;
             _repository = repository;
             _logger.LogInformation("Controller consturctor");
-            //_context = context; 
         }
 
         [HttpGet]
@@ -70,7 +68,7 @@ namespace ProductsApi.Controllers
         public void Put(int id, [FromBody] string value)
         {
         }
-                // DELETE api/<ProductsController>/5
+        // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
