@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ProductsApi.Data;
 
 namespace ProductsApi
 {
@@ -26,8 +28,20 @@ namespace ProductsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AdventureWorksDbContext>(builder => {
+
+                var options = builder.UseInMemoryDatabase("FakeDatabase");
+
+                var dbOptions = new DbContextOptionsBuilder<AdventureWorksDbContext>()
+                                   .UseInMemoryDatabase("FakeDatabase").Options;
+
+                using var db = new AdventureWorksDbContext(dbOptions);
+                db.Database.EnsureCreated();
+            });
+
             // Middleware
-            services.AddSingleton<Repositories.ProductRepository>();
+            services.AddScoped<AdventureWorksDbContext>();
+            services.AddScoped<Repositories.ProductRepository>();
 
             services.AddCors(options =>
             {

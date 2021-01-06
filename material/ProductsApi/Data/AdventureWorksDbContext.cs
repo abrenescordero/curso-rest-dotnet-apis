@@ -1,0 +1,34 @@
+﻿using Microsoft.EntityFrameworkCore;
+using ProductsApi.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ProductsApi.Data
+{
+    public class AdventureWorksDbContext : DbContext
+    {
+        public AdventureWorksDbContext()
+        {
+        }
+
+        public AdventureWorksDbContext(DbContextOptions<AdventureWorksDbContext> options)
+            : base(options)
+        {
+        }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            var product = modelBuilder.Entity<Product>();
+
+            product.HasKey(b => b.Id);
+            product.HasData(new[] { new Product { Id = 1, Name = "Jeans" }, new Product { Id = 2, Name = "T-shirts" } });
+        }
+
+        public virtual DbSet<Product> Products { get; set; }
+    }
+}
