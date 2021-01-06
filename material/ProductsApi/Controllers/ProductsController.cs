@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProductsApi.Models;
+using Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,39 +16,68 @@ namespace ProductsApi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        //https://codeshare.io/21d7on
-        private readonly ILogger<ProductsController> _logger;
-        private readonly object[] _products;
-        //private readonly AdventureWorksDbContext _context;
+        // CRUD-> Create, Read, Update, Delete
 
-        public ProductsController(ILogger<ProductsController> logger, object[] products
+        private readonly ILogger<ProductsController> _logger;
+        //private readonly AdventureWorksDbContext _context;
+        private readonly ProductRepository _repository;
+
+        public ProductsController(ILogger<ProductsController> logger,
+            ProductRepository repository
             //, AdventureWorksDbContext context
             )
         {
             _logger = logger;
-            _products = products;
-            _logger.LogInformation("ProductsController constructor");
+            _repository = repository;
+
             //_context = context; 
+            _logger.LogInformation("ProductsController constructor");
         }
-        // CRUD 
-        // GET: api/<ProductsController>
+
         [HttpGet]
-        public IEnumerable<object> Get()
+        public IEnumerable<Product> Get()
         {
-            return _products;
+            return _repository.Get();
         }
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult GetById(int id)
         {
-            return Ok(_products[0]);
+            var result = _repository.Get().FirstOrDefault(p => p.Id == id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            // 200
+            return Ok(result);
         }
 
         // POST api/<ProductsController>
         [HttpPost]
-        public void Post([FromBody] Models.Product value)
+        public IActionResult Post([FromBody] Product value)
         {
+            Product result = _repository.Add(value);
+
+            return CreatedAtAction(nameof(GetById), new { Id = result.Id }, value);
+        }
+
+        // DELETE api/<ProductsController>/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var result = _repository.Get(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            _repository.Delete(id);
+
+            return new ObjectResult(new object()) { StatusCode = (int)HttpStatusCode.OK};
         }
 
         // PUT api/<ProductsController>/5
@@ -54,13 +85,5 @@ namespace ProductsApi.Controllers
         public void Put(int id, [FromBody] string value)
         {
         }
-
-        // DELETE api/<ProductsController>/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            return new ObjectResult(new object()) { StatusCode = (int)HttpStatusCode.NotImplemented };
-        }
-
     }
 }
