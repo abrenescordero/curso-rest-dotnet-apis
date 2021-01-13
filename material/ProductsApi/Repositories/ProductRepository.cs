@@ -1,23 +1,22 @@
-﻿using Core.Data;
-using ProductsApi.Models;
+﻿using ProductsApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Data;
 
 namespace Repositories
-
 {
+    // ORM => Object Relational Mapping
     public class ProductRepository
-
     {
-        //ORM Object Relational Mapping
         private readonly AdventureWorksDbContext _context;
+
         public ProductRepository(AdventureWorksDbContext context)
         {
             _context = context;
         }
 
-        public Product[] Get()
+        public Product[] Get() 
         {
             return _context.Products.ToArray();
         }
@@ -25,6 +24,7 @@ namespace Repositories
         public Product Add(Product value)
         {
             _context.Products.Add(value);
+
             _context.SaveChanges();
 
             return value;
@@ -36,17 +36,15 @@ namespace Repositories
 
             if (match != null)
             {
-                _context.Products.Remove(match);
+                _context.Remove(match);
             }
-            _context.SaveChanges();
 
+            _context.SaveChanges();
         }
 
-        public object Get(int id)
+        public Product Get(int id)
         {
-
             return _context.Products.Find(id);
-
         }
     }
 }

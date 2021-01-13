@@ -5,7 +5,7 @@ namespace Core.Data
 {
     public class AdventureWorksDbContext : DbContext
     {
-        public AdventureWorksDbContext(AdventureWorksDbContext context)
+        public AdventureWorksDbContext()
         {
         }
 

@@ -2,23 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Core.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory;
+using ProductsApi.Models;
 
+//
 namespace ProductsApi
 {
     public class Startup
     {
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,10 +31,9 @@ namespace ProductsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Middleware
+            // Middleware
 
-            services.AddDbContext<AdventureWorksDbContext>(builder =>
-            {
+            services.AddDbContext<AdventureWorksDbContext>(builder => {
 
                 var options = builder.UseInMemoryDatabase("FakeDatabase");
 
@@ -43,8 +44,7 @@ namespace ProductsApi
                 db.Database.EnsureCreated();
             });
 
-            //services.AddScoped<AdventureWorksDbContext>();
-
+            services.AddScoped<AdventureWorksDbContext>();
             services.AddScoped<Repositories.ProductRepository>();
 
             services.AddCors(options =>
@@ -53,13 +53,12 @@ namespace ProductsApi
                                   builder =>
                                   {
                                       builder.WithOrigins("https://localhost:80")
-                                      .AllowAnyHeader()
-                                      .AllowAnyMethod()
-                                      .AllowCredentials();
+                                             .AllowAnyHeader()
+                                             .AllowAnyMethod() // GET, POST, PUT, etc
+                                             .AllowCredentials();
                                   });
             });
 
-            // services.AddResponseCaching();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -73,11 +72,9 @@ namespace ProductsApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
             }
 
             app.UseCors("CORS");
-
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductsApi v1"));
 

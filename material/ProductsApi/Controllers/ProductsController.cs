@@ -16,20 +16,20 @@ namespace ProductsApi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-
-
-        //CRUD -> Create,Read,Update,Delete
+        // CRUD-> Create, Read, Update, Delete
 
         private readonly ILogger<ProductsController> _logger;
+        //private readonly AdventureWorksDbContext _context;
         private readonly ProductRepository _repository;
-        public ProductsController(ILogger<ProductsController> logger,
-           ProductRepository repository
 
+        public ProductsController(ILogger<ProductsController> logger,
+            ProductRepository repository
             )
         {
             _logger = logger;
             _repository = repository;
-            _logger.LogInformation("Controller consturctor");
+
+            _logger.LogInformation("ProductsController constructor");
         }
 
         [HttpGet]
@@ -46,9 +46,10 @@ namespace ProductsApi.Controllers
 
             if (result == null)
             {
-
                 return NotFound();
             }
+
+            // 200
             return Ok(result);
         }
 
@@ -56,18 +57,11 @@ namespace ProductsApi.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Product value)
         {
-
             Product result = _repository.Add(value);
 
             return CreatedAtAction(nameof(GetById), new { Id = result.Id }, value);
-
         }
 
-        // PUT api/<ProductsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -76,13 +70,18 @@ namespace ProductsApi.Controllers
 
             if (result == null)
             {
-
                 return NotFound();
             }
 
             _repository.Delete(id);
 
-            return new ObjectResult(new object()) { StatusCode = (int)HttpStatusCode.OK };
+            return new ObjectResult(new object()) { StatusCode = (int)HttpStatusCode.OK};
+        }
+
+        // PUT api/<ProductsController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
         }
     }
 }
