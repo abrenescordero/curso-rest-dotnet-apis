@@ -44,7 +44,7 @@ namespace ProductsApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var result = _repository.Get().FirstOrDefault(p => p.Id == id);
+            var result = _repository.Get(id);
 
             if (result == null)
             {
@@ -61,7 +61,7 @@ namespace ProductsApi.Controllers
         {
             Product result = _repository.Add(value);
 
-            return CreatedAtAction(nameof(GetById), new { Id = result.Id }, value);
+            return CreatedAtAction(nameof(GetById), new { Id = result.ProductId }, value);
         }
 
         // DELETE api/<ProductsController>/5

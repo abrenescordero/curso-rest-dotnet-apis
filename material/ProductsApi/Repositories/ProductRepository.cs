@@ -43,7 +43,7 @@ namespace Repositories
 
         public Product Get(int id)
         {
-            return _context.Products.FirstOrDefault(p => p.Id == id);
+            return _context.Products.FirstOrDefault(p => p.ProductId == id);
         }
     }
 }

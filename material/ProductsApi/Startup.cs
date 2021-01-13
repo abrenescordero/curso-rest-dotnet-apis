@@ -30,11 +30,12 @@ namespace ProductsApi
         {
             services.AddDbContext<AdventureWorksDbContext>(builder => {
 
-                var options = builder.UseInMemoryDatabase("FakeDatabase");
+                //var options = builder.UseInMemoryDatabase("FakeDatabase");
 
-                var dbOptions = new DbContextOptionsBuilder<AdventureWorksDbContext>()
-                                   .UseInMemoryDatabase("FakeDatabase").Options;
+                //var dbOptions = new DbContextOptionsBuilder<AdventureWorksDbContext>().UseInMemoryDatabase("FakeDatabase").Options;
 
+                var connectionString = Configuration.GetConnectionString("DefaultConnection");
+                var dbOptions = new DbContextOptionsBuilder<AdventureWorksDbContext>().UseSqlServer(connectionString).Options;
                 using var db = new AdventureWorksDbContext(dbOptions);
                 db.Database.EnsureCreated();
             });
