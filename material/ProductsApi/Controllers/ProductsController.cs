@@ -35,6 +35,11 @@ namespace ProductsApi.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.NotModified)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+
         public IEnumerable<Product> Get()
         {
             return _repository.Get();
